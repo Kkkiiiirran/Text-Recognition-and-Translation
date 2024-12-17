@@ -62,7 +62,7 @@ def initialize_translation_session():
         {
         "role": "user",
         "parts": [
-            "1. TRANSLATE the text as it is. No extra sentences like \"here is the translation\", \"here is the translated text\", \"lets' translate text\", etc. NO EXTRA TEXT EXCEPT THE TRANSLATED TEXT.",
+            "1. TRANSLATE the text as it is. If numbers are involved translate the numbers too. No extra sentences like \"here is the translation\", \"here is the translated text\", \"lets' translate text\", etc. NO EXTRA TEXT EXCEPT THE TRANSLATED TEXT.",
         ],
         },
         {
@@ -80,7 +80,7 @@ def initialize_translation_session():
         {
         "role": "model",
         "parts": [
-            "1. Translate the given text exactly as it is, without adding any extra phrases or sentences like \"here is the translation\" or similar.  Only the translated text should be provided.\n2. You will specify the source and target languages for translation.\n\nDo I have this correct?\n",
+            "1. Translate the given text exactly as it is, without adding any extra phrases or sentences like \"here is the translation\" or similar.  Only the translated text should be provided.\n2. You will specify the source and target languages for translation. \n\nDo I have this correct?\n ",
         ],
         },
         {
