@@ -1,6 +1,6 @@
 from PIL import Image
 import pytesseract
-
+pytesseract.pytesseract.tesseract_cmd = "/usr/bin/tesseract"
 def perform_ocr(uploaded_file, lang):
     """
     Perform OCR on an image using pytesseract.
