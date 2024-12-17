@@ -1,5 +1,5 @@
 import sys
-print(sys.version)
+# print(sys.version)
 import os
 import streamlit as st
 from ocr import perform_ocr
@@ -10,10 +10,10 @@ import os
 from dotenv import load_dotenv
 import google.generativeai as genai
 import sys
-print(sys.version)
+# print(sys.version)
 
 # Load environment variables from .env file
-load_dotenv()
+# load_dotenv()
 
 # Fetch the API key from the environment variables
 api_key = os.getenv("api_key")
