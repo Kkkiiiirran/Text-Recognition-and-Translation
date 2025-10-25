@@ -1,86 +1,92 @@
 import sys
-# print(sys.version)
 import os
 import streamlit as st
 from ocr import perform_ocr
 from translate import initialize_translation_session, translate_text
 from PIL import Image
-# from dotenv import load_dotenv
-import os
-from dotenv import load_dotenv
 import google.generativeai as genai
-import sys
-# print(sys.version)
 
-# Load environment variables from .env file
-# load_dotenv()
+# -----------------------------------
+# ✅ Configure Google API
+# -----------------------------------
 
-# Fetch the API key from the environment variables
-api_key = os.getenv("api_key")
+from dotenv import load_dotenv
 
-if api_key is None:
-    raise ValueError("API Key is missing. Please check your .env file.")
 
-# Configure the Google AI API with the API key
+load_dotenv()
+
+api_key = os.environ.get("GOOGLE_API_KEY")
+
 genai.configure(api_key=api_key)
 
-# Rest of your code remains the same...
+# -----------------------------------
+# ✅ Point Tesseract to your custom tessdata directory
+# -----------------------------------
+# Example path — update it if your folder name or location differs
+os.environ["TESSDATA_PREFIX"] = os.path.join(os.getcwd(), "tessdata")
 
+# Optionally verify:
+print("TESSDATA_PREFIX set to:", os.environ["TESSDATA_PREFIX"])
 
+# -----------------------------------
+# ✅ Main Streamlit app
+# -----------------------------------
 def main():
     st.title("OCR and Translation App")
     
-    # Upload image folder
-    uploaded_files = st.file_uploader("Upload Images", type=["png", "jpg", "jpeg", "bmp", "gif"], accept_multiple_files=True)
+    # Upload image(s)
+    uploaded_files = st.file_uploader(
+        "Upload Images", 
+        type=["png", "jpg", "jpeg", "bmp", "gif"], 
+        accept_multiple_files=True
+    )
 
-    # Select source and target languages
-    source_lang = st.selectbox("Select Source Language", ["English", "Hindi", "Punjabi", "Gujarati", "Bengali", "French", "Spanish"])
-    target_lang = st.selectbox("Select Target Language", ["English", "Hindi", "Punjabi", "Gujarati", "Bengali", "French", "Spanish"])
+    # Language selections
+    source_lang = st.selectbox("Select Source Language", 
+                               ["English", "Hindi", "Gujarati", "Bengali", "French", "Spanish"])
+    target_lang = st.selectbox("Select Target Language", 
+                               ["English", "Hindi", "Gujarati", "Bengali", "French", "Spanish"])
     
-    # Initialize translation session
+    # Initialize translation
     chat_session = initialize_translation_session()
 
     if st.button("Translate"):
         if uploaded_files:
             translated_texts = []
-            
+
+            # Language map for Tesseract codes
+            lang_map = {
+                "English": "eng",
+                "Hindi": "hin",
+                "Gujarati": "guj",
+                # "Punjabi": "pun",
+                "Bengali": "ben",
+                "Spanish": "spa",
+                "French": "fra"
+            }
+
+            lang = lang_map.get(source_lang, "eng")
+
             for uploaded_file in uploaded_files:
-                # Perform OCR on the uploaded image
                 img = Image.open(uploaded_file)
                 st.image(img, caption=f"Uploaded Image - {uploaded_file.name}", width=300)
-                if source_lang == "English":
-                    lang = "eng"
-                elif source_lang == "Hindi":
-                    lang="hin"
-                elif source_lang == "Gujarati":
-                    lang="guj"
-                elif source_lang == "Punjabi":
-                    lang="pun"
-                elif source_lang=="Bengali":
-                    lang="ben"
-                elif source_lang=="Spanish":
-                    lang="spa"
-                elif source_lang =="French":
-                    lang="fra"
 
+                # Perform OCR
                 extracted_text = perform_ocr(uploaded_file, lang)
                 st.write(f"**Extracted Text from {uploaded_file.name}:**\n{extracted_text}")
 
-                # Translate the extracted text
+                # Translate
                 translated_text = translate_text(chat_session, extracted_text, source_lang, target_lang)
                 translated_texts.append((uploaded_file.name, translated_text))
                 st.write(f"**Translated Text for {uploaded_file.name}:**\n{translated_text}")
 
-            # Optionally, provide a download link for the results
+            # Download button for results
             if translated_texts:
-                result = "\n\n".join([f"{image_file}:\n{translated_text}" for image_file, translated_text in translated_texts])
+                result = "\n\n".join([f"{fname}:\n{txt}" for fname, txt in translated_texts])
                 st.download_button("Download Translations", result, "translated_texts.txt", "text/plain")
         else:
             st.error("Please upload at least one image.")
 
-# def configure():
-#     load_dotenv()
+# Run the app
 if __name__ == "__main__":
-    # configure()
     main()
-
