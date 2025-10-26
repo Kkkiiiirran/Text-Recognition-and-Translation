@@ -1,24 +1,5 @@
-"""
-Install the Google AI Python SDK
+import google.generativeai as genai
 
-$ pip install google-generativeai
-"""
-
-import os
-from google import genai
-# genai.configure(api_key="AIzaSyBf3ghpIO2QBSAy39uhgTa4nVAGHf-94js")
-
-
-# def upload_to_gemini(path, mime_type="text/plain"):
-#   """Uploads the given file to Gemini.
-
-#   See https://ai.google.dev/gemini-api/docs/prompting_with_media
-#   """
-#   file = genai.upload_file(path, mime_type)
-#   print(f"Uploaded file '{file.display_name}' as: {file.uri}")
-#   return file
-
-# Create the model
 generation_config = {
   "temperature": 1,
   "top_p": 0.95,
@@ -33,17 +14,8 @@ model = genai.GenerativeModel(
 
 )
 
-# You may need to update the file paths
-# files = [
-#   upload_to_gemini("translate.txt", mime_type="text/plain"),
-# ]
 def initialize_translation_session():
-    """
-    Initializes a chat session with predefined rules for translation.
-    This session can be reused for multiple translation requests.
-    
-    :return: A reusable chat session object.
-    """
+
     
     chat_session = model.start_chat(
     history=[

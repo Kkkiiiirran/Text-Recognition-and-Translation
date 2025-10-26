@@ -4,7 +4,7 @@ import streamlit as st
 from ocr import perform_ocr
 from translate import initialize_translation_session, translate_text
 from PIL import Image
-from google import genai
+import google.generativeai as genai
 
 # -----------------------------------
 # ✅ Configure Google API
