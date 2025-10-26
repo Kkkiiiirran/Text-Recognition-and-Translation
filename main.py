@@ -2,35 +2,21 @@ import sys
 import os
 import streamlit as st
 from ocr import perform_ocr
-from translate import initialize_translation_session, translate_text
 from PIL import Image
 import google.generativeai as genai
-
-# -----------------------------------
-# ✅ Configure Google API
-# -----------------------------------
-
 from dotenv import load_dotenv
 
+# Import functions from the new config file
+from genai_config import initialize_translation_session, translate_text
 
+# Load environment variables
 load_dotenv()
 
-api_key = os.environ.get("GOOGLE_API_KEY")
-
-genai.configure(api_key=api_key)
-
-# -----------------------------------
-# ✅ Point Tesseract to your custom tessdata directory
-# -----------------------------------
-# Example path — update it if your folder name or location differs
+# Point Tesseract to your custom tessdata directory
 os.environ["TESSDATA_PREFIX"] = os.path.join(os.getcwd(), "tessdata")
-
-# Optionally verify:
 print("TESSDATA_PREFIX set to:", os.environ["TESSDATA_PREFIX"])
 
-# -----------------------------------
-# ✅ Main Streamlit app
-# -----------------------------------
+# Main Streamlit app
 def main():
     st.title("OCR and Translation App")
     
@@ -59,7 +45,6 @@ def main():
                 "English": "eng",
                 "Hindi": "hin",
                 "Gujarati": "guj",
-                # "Punjabi": "pun",
                 "Bengali": "ben",
                 "Spanish": "spa",
                 "French": "fra"
