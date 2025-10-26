@@ -5,6 +5,7 @@ from ocr import perform_ocr
 from PIL import Image
 import google.generativeai as genai
 from dotenv import load_dotenv
+os.environ["STREAMLIT_WATCHER_TYPE"] = "poll"
 
 # Import functions from the new config file
 from genai_config import initialize_translation_session, translate_text
